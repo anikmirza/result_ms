@@ -1,0 +1,71 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/anik/My Files/NETCoreProjects/result_ms/result_ms.csproj": {}
+  },
+  "projects": {
+    "/home/anik/My Files/NETCoreProjects/result_ms/result_ms.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/anik/My Files/NETCoreProjects/result_ms/result_ms.csproj",
+        "projectName": "result_ms",
+        "projectPath": "/home/anik/My Files/NETCoreProjects/result_ms/result_ms.csproj",
+        "packagesPath": "/home/anik/.nuget/packages/",
+        "outputPath": "/home/anik/My Files/NETCoreProjects/result_ms/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/anik/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.2, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[5.0.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.301/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
