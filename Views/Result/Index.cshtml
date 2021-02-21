@@ -1,22 +1,12 @@
 ﻿@{
-    ViewData["Title"] = "Student Setup";
+    ViewData["Title"] = "Result Setup";
 }
 
 <div class="text-center">
-    <h1 class="display-6">Student Setup</h1>
+    <h1 class="display-6">Result Setup</h1>
     <hr/>
     <div class="row">
         <div class="col-md-6">
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-md-3">
-                        <label for="name">Name</label>
-                    </div>
-                    <div class="col-md-9">
-                        <input id="name" type="text" class="form-control">
-                    </div>
-                </div>
-            </div>
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-3">
@@ -32,30 +22,34 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-3">
-                        <label for="roll">Roll</label>
+                        <label for="student">Student</label>
                     </div>
                     <div class="col-md-9">
-                        <input id="roll" type="text" class="form-control">
+                        <select id="student" class="form-control">
+                            <option>Please select class</option>
+                        </select>
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-3">
-                        <label for="email">Email</label>
+                        <label for="subject">Subject</label>
                     </div>
                     <div class="col-md-9">
-                        <input id="email" type="text" class="form-control">
+                        <select id="subject" class="form-control">
+                            <option>Loading...</option>
+                        </select>
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-3">
-                        <label for="phone">phone</label>
+                        <label for="mark">Mark</label>
                     </div>
                     <div class="col-md-9">
-                        <input id="phone" type="text" class="form-control">
+                        <input id="mark" type="text" class="form-control">
                     </div>
                 </div>
             </div>
@@ -65,17 +59,18 @@
             </div>
         </div>
         <div class="col-md-6">
-            <table id="student-list" class="data-list table table-striped table-hover">
+            <table id="result-list" class="data-list table table-striped table-hover">
                 <thead>
                     <tr>
+                        <th>Class</th>
                         <th>Name</th>
-                        <th>Roll</th>
-                        <th colspan="3">Class</th>
+                        <th>Subject</th>
+                        <th colspan="3">Mark</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="5">Loading...</td>
+                        <td colspan="6">Loading...</td>
                     </tr>
                 </tbody>
             </table>
@@ -91,5 +86,5 @@
 
 @section Scripts {
     <script src="/lib/Toastr/toastr.js"></script>
-    <script src="/js/student.js"></script>
+    <script src="/js/result.js"></script>
 }

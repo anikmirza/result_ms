@@ -12,12 +12,12 @@ using result_ms.Helper;
 
 namespace result_ms.Controllers
 {
-    public class StudentController : Controller
+    public class ResultController : Controller
     {
-        private readonly ILogger<StudentController> _logger;
+        private readonly ILogger<ResultController> _logger;
         private DBSContext DB;
 
-        public StudentController(ILogger<StudentController> logger)
+        public ResultController(ILogger<ResultController> logger)
         {
             _logger = logger;
         }
@@ -37,31 +37,56 @@ namespace result_ms.Controllers
             return Json(_List);
         }
 
-        public JsonResult GetStudentList()
+        public JsonResult GetSubjectList()
         {
             DB = new DBSContext();
-            var _List = (from S in DB.Students
-            join C in DB.Classes on S.ClassId equals C.ClassId
-            select new {
-                id = S.StudentId,
-                name = S.Name,
-                roll = S.Roll,
-                className = C.Name + " (" + C.Section + ")"
-            }).OrderBy(x => x.className).ThenBy(x => x.name).ToList();
+            var _List = DB.Subjects.Select(x => new {
+                id = x.SubjectId,
+                name = x.Name
+            }).OrderBy(x => x.name).ToList();
             return Json(_List);
         }
 
-        public JsonResult GetStudentDetails(int Id)
+        public JsonResult GetStudentList(int classId)
         {
             DB = new DBSContext();
-            var StudentObj = DB.Students.Where(x => x.StudentId == Id).Select(x => new {
-                name = x.Name,
-                classId = x.ClassId,
-                roll = x.Roll,
-                phone = x.Phone,
-                email = x.Email
+            var _List = DB.Students.Where(x => x.ClassId == classId).Select(x => new {
+                id = x.StudentId,
+                name = x.Name
+            }).OrderBy(x => x.name).ToList();
+            return Json(_List);
+        }
+
+        public JsonResult GetResultList()
+        {
+            DB = new DBSContext();
+            var _List = (from R in DB.Results
+            join S in DB.Students on R.StudentId equals S.StudentId
+            join C in DB.Classes on S.ClassId equals C.ClassId
+            join SJ in DB.Subjects on R.SubjectId equals SJ.SubjectId
+            select new {
+                id = R.ResultId,
+                className = C.Name + " (" + C.Section + ")",
+                name = S.Name,
+                subjectName = SJ.Name,
+                mark = R.Mark
+            }).OrderBy(x => x.className).ThenBy(x => x.name).ThenBy(x => x.subjectName).ToList();
+            return Json(_List);
+        }
+
+        public JsonResult GetResultDetails(int Id)
+        {
+            DB = new DBSContext();
+            var ResultObj = (from R in DB.Results
+            join S in DB.Students on R.StudentId equals S.StudentId
+            where R.ResultId == Id
+            select new {
+                classId = S.ClassId,
+                studentId = R.StudentId,
+                subjectId = R.SubjectId,
+                mark = R.Mark
             }).First();
-            return Json(StudentObj);
+            return Json(ResultObj);
         }
 
         [HttpPost]
@@ -70,7 +95,7 @@ namespace result_ms.Controllers
             try
             {
                 string PostObjectStr = await GetPostData();
-                PO_Student_Save PostObject = JsonConvert.DeserializeObject<PO_Student_Save>(PostObjectStr);
+                PO_Result_Save PostObject = JsonConvert.DeserializeObject<PO_Result_Save>(PostObjectStr);
                 DB = new DBSContext();
                 string Message = "";
 
@@ -78,17 +103,15 @@ namespace result_ms.Controllers
                 {
                     return JsonConvert.SerializeObject(new { IsSuccess = false, Message = Message });
                 }
-                Student _Student = 0 == PostObject.Id ?  new Student() : DB.Students.Find(PostObject.Id);
-                _Student.ClassId = PostObject.ClassId;
-                _Student.Name = PostObject.Name;
-                _Student.Roll = PostObject.Roll;
-                _Student.Phone = PostObject.Phone;
-                _Student.Email = PostObject.Email;
+                Result _Result = 0 == PostObject.Id ?  new Result() : DB.Results.Find(PostObject.Id);
+                _Result.StudentId = PostObject.StudentId;
+                _Result.SubjectId = PostObject.SubjectId;
+                _Result.Mark = Math.Round(PostObject.Mark, 2);
 
                 if (0 == PostObject.Id)
                 {
-                    _Student.DateOfEntry = DateTime.Now;
-                    DB.Students.Add(_Student);
+                    _Result.DateOfEntry = DateTime.Now;
+                    DB.Results.Add(_Result);
                 }
                 DB.SaveChanges();
                 return JsonConvert.SerializeObject(new { IsSuccess = true });
@@ -110,8 +133,8 @@ namespace result_ms.Controllers
                 string PostObjectStr = await GetPostData();
                 int Id = JsonConvert.DeserializeObject<int>(PostObjectStr);
                 DB = new DBSContext();
-                Student _Student = DB.Students.Find(Id);
-                DB.Students.Remove(_Student);
+                Result _Result = DB.Results.Find(Id);
+                DB.Results.Remove(_Result);
                 DB.SaveChanges();
                 return JsonConvert.SerializeObject(new { IsSuccess = true });
             }
@@ -141,43 +164,45 @@ namespace result_ms.Controllers
             return Str;
         }
 
-        private bool IsValid(PO_Student_Save PostObject, out string Message)
+        private bool IsValid(PO_Result_Save PostObject, out string Message)
         {
             Message = "";
 
-            if (string.IsNullOrEmpty(PostObject.Name))
+            if (0 == PostObject.StudentId)
             {
-                Message = "Name is Required!";
+                Message = "Student is Required!";
                 return false;
             }
-            if (0 == PostObject.ClassId)
+            if (0 == PostObject.SubjectId)
             {
-                Message = "Class is Required!";
+                Message = "Subject is Required!";
                 return false;
             }
-            if (0 == PostObject.Roll)
+            if (0 == PostObject.Mark)
             {
-                Message = "Roll is Required!";
+                Message = "Mark is Required!";
                 return false;
             }
-            if (0 == PostObject.Id && DB.Students.Where(x => x.Name == PostObject.Name).Count() > 0)
+            if (PostObject.Mark < 0)
             {
-                Message = "Duplicate Name Exists!";
+                Message = "Mark can not be negetive!";
                 return false;
             }
-            if (PostObject.Id > 0 && DB.Students.Where(x => x.Name == PostObject.Name && x.StudentId != PostObject.Id).Count() > 0)
+            if (PostObject.Mark > 100)
             {
-                Message = "Duplicate Name Exists!";
+                Message = "Mark can not be greater than 100!";
                 return false;
             }
-            if (0 == PostObject.Id && DB.Students.Where(x => x.ClassId == PostObject.ClassId && x.Roll == PostObject.Roll).Count() > 0)
+            if (0 == PostObject.Id && DB.Results.Where(x => x.StudentId == PostObject.StudentId
+                && x.SubjectId == PostObject.SubjectId).Count() > 0)
             {
-                Message = "Duplicate Roll Exists!";
+                Message = "Duplicate Exists!";
                 return false;
             }
-            if (PostObject.Id > 0 && DB.Students.Where(x => x.ClassId == PostObject.ClassId && x.Roll == PostObject.Roll && x.StudentId != PostObject.Id).Count() > 0)
+            if (PostObject.Id > 0 && DB.Results.Where(x => x.StudentId == PostObject.StudentId
+                && x.SubjectId == PostObject.SubjectId && x.ResultId != PostObject.Id).Count() > 0)
             {
-                Message = "Duplicate Roll Exists!";
+                Message = "Duplicate Exists!";
                 return false;
             }
             return true;

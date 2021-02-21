@@ -21,11 +21,20 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="Index"><i class="fa fa-users"></i> Student</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Class" asp-action="Index"><i class="fa fa-users"></i> Class</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="Index"><i class="fa fa-graduation-cap"></i> Student</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Subject" asp-action="Index"><i class="fa fa-book"></i> Subject</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Result" asp-action="Index"><i class="fa fa-address-card-o"></i> Result</a>
+                        </li>
+                        <!--<li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Subject" asp-action="Index"><i class="fa fa-file-text-o"></i> Report</a>
+                        </li>-->
                     </ul>
                 </div>
             </div>
@@ -39,7 +48,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2021 - Result Management System by <b>Mirza Ikteder (Anik)</b> - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2021 - Result Management System by <b>Mirza Ikteder (Anik)</b>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
